@@ -1,0 +1,60 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TestScriptCoroutine : MonoBehaviour
+{
+
+    public InventoryObject inventory;
+
+    private bool Ismoving;
+
+    void Update()
+    {
+        if (transform.hasChanged)
+        {
+            Ismoving = true;
+            transform.hasChanged = false;
+        }
+        else
+        {
+            Ismoving = false;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Resource" && Ismoving == false)
+        { 
+        StartCoroutine(ResourceGathering());
+            Debug.Log("On Resource node and not moving");
+        }
+    }
+
+    IEnumerator ResourceGathering()
+    {
+        float waitTime = 4;
+        yield return wait(waitTime);
+
+        //Add item to inventory
+        var item = col.GetComponent<Item>();
+        if (item)
+        {
+            inventory.AddItem(item.item, 1);
+        }
+
+
+    }
+
+   IEnumerator wait(float waitTime)
+   {
+       while (!Ismoving)
+       {
+           if (Ismoving == true)
+           {
+               yield break;
+           }
+           yield return null;
+      }
+   }
+}
